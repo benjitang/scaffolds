@@ -1,0 +1,1 @@
+Project structure inspired by https://github.com/FearlessOne07/Spectrum/tree/main
