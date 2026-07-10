@@ -1,0 +1,51 @@
+[project]
+name = "PROJECT_NAME_PLACEHOLDER-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.139.0",
+    "uvicorn[standard]>=0.51.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+    "ruff>=0.15.21",
+]
+
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+exclude = [
+    ".venv",
+    "__pycache__",
+    "migrations",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes (unused imports/vars, undefined names)
+    "I",    # isort (import sorting)
+    "B",    # flake8-bugbear (common bug patterns, e.g. mutable default args)
+    "C4",   # flake8-comprehensions (simplify list/dict/set comprehensions)
+    "UP",   # pyupgrade (modernize syntax for your target Python version)
+    "SIM",  # flake8-simplify (simplify unnecessarily complex code)
+]
+ignore = [
+    "E501",  # line too long (Black already handles this)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.ruff.format]
+quote-style = "double"
