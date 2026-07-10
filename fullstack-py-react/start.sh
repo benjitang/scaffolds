@@ -21,7 +21,7 @@ fi
 tmux new-session -d -s "$SESSION" -n dev
 
 # Left pane: backend
-tmux send-keys -t "$SESSION:dev" "cd backend && uv run uvicorn main:app --reload" C-m
+tmux send-keys -t "$SESSION:dev" "cd backend && uv run uvicorn app.main:app --reload" C-m
 
 # Right pane: frontend
 tmux split-window -h -t "$SESSION:dev"
