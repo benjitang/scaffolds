@@ -1,9 +1,10 @@
 # scaffolds
-Quick-start templates for new projects. Currently supports: `fullstack-py-react`, `python-base`, `cpp-base`.
+Quick-start templates for new projects. Currently supports: `fullstack-py-react`, `mobile-py-reactnative`, `python-base`, `cpp-base`.
 
 ## Usage
 ```bash
 ./create-fullstack.sh <new-project-name> [destination-dir]
+./create-mobile.sh <new-project-name> [destination-dir]
 ./create-python-base.sh <new-project-name> [destination-dir]
 ./create-cpp-base.sh <new-project-name> [destination-dir]
 ```
@@ -11,6 +12,7 @@ Quick-start templates for new projects. Currently supports: `fullstack-py-react`
 **Examples:**
 ```bash
 ./create-fullstack.sh my-cool-app ~/Code/projects
+./create-mobile.sh my-mobile-app ~/Code/projects
 ./create-python-base.sh my-tool ~/Code/projects
 ./create-cpp-base.sh my-cpp-tool ~/Code/projects
 ```
@@ -24,6 +26,15 @@ Defaults to the current directory if `destination-dir` is omitted.
 3. Installs backend deps: `uv sync` (in `backend/`)
 4. Installs frontend deps: `npm install` (in `frontend/`)
 5. Runs `git init` in the new project
+
+## What `create-mobile.sh` does
+1. Copies `mobile-py-reactnative/` to `<destination-dir>/<new-project-name>`
+   (excludes `node_modules`, `.venv`, `__pycache__`, lockfiles, `.git`, `.expo`, `.expo-shared`, `ios/Pods`, `ios/build`, `android/.gradle`, `android/build`)
+2. Replaces every `PROJECT_NAME_PLACEHOLDER` placeholder in the copied files with your project name
+3. Installs backend deps: `uv sync` (in `backend/`)
+4. Installs frontend deps: `npm install` (in `frontend/`)
+5. Installs iOS pods if `frontend/ios/Podfile` exists (bare RN only — skipped for Expo-managed projects, since native folders aren't generated until `expo prebuild`)
+6. Runs `git init` in the new project
 
 ## What `create-python-base.sh` does
 1. Copies `python-base/` to `<destination-dir>/<new-project-name>`
@@ -46,7 +57,15 @@ From the project root (the folder containing `backend/` and `frontend/`):
 ./start.sh   # opens a tmux session, backend (left pane) + frontend (right pane)
 ./stop.sh    # kills that session, stops both
 ```
-`start.sh` runs `uv run uvicorn app.main:app --reload` in `backend/`, so `backend/app/main.py` needs a FastAPI instance named `app`. Re-attach anytime with `tmux attach -t <project-name>-dev`.
+`start.sh` installs backend (`uv sync`) and frontend (`npm install`) dependencies before starting, then runs `uv run uvicorn app.main:app --reload` in `backend/`, so `backend/app/main.py` needs a FastAPI instance named `app`. Re-attach anytime with `tmux attach -t <project-name>-dev`.
+
+## Running the mobile dev servers
+From the project root (the folder containing `backend/` and `frontend/`):
+```bash
+./start.sh [android|ios|web]   # opens a tmux session, backend (left pane) + Expo (right pane)
+./stop.sh                      # kills that session, stops both
+```
+`start.sh` installs backend (`uv sync`) and frontend (`npm install`) dependencies before starting, then runs `uv run uvicorn app.main:app --reload` in `backend/` and `npx expo start` in `frontend/`. Pass `android`, `ios`, or `web` to target a specific platform (defaults to the Expo dev menu if omitted). Re-attach anytime with `tmux attach -t <project-name>-dev`.
 
 `python-base` has no server, so there's no `start.sh`/`stop.sh` — run it directly:
 ```bash
@@ -66,10 +85,11 @@ alias cpprun='./scripts/run.sh'
 
 ## Requirements
 - [`uv`](https://astral.sh/uv) installed and on `$PATH`
-- `npm` installed (for `fullstack-py-react`)
+- `npm` installed (for `fullstack-py-react` and `mobile-py-reactnative`)
 - `rsync`
-- `tmux` (for `fullstack-py-react`'s `start.sh`/`stop.sh`)
+- `tmux` (for `start.sh`/`stop.sh` in `fullstack-py-react` and `mobile-py-reactnative`)
 - `cmake` and a C++ compiler supporting C++23 (for `cpp-base`)
+- Expo CLI tooling / a simulator or device setup (for running `mobile-py-reactnative` on iOS/Android — see [Expo docs](https://docs.expo.dev))
 
 ## Adding the placeholder to new scaffold files
 Any file that should carry the project's name needs the literal token:
