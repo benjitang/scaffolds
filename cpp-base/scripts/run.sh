@@ -7,7 +7,14 @@ cd "$(dirname "$0")/.."
 if [ "$1" == "--clean" ]; then
     echo "Cleaning build directory..."
     rm -rf build
-    shift  # remove --clean from args so it's not passed to the executable
+    shift
+fi
+
+# Handle --format flag
+if [ "$1" == "--format" ]; then
+    echo "Formatting source files..."
+    find src -regex '.*\.\(cpp\|hpp\|h\)' -exec clang-format -i {} \;
+    shift
 fi
 
 # Configure quietly, only if build dir doesn't exist yet
